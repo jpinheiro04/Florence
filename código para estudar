@@ -1,0 +1,94 @@
+sudo mount -o ro,noexec,nodev img_zen.dd analise  
+foremost -T img_zen.dd   
+sudo apt install foremost    
+sha256sum paisagem.jpg       
+icat img_zen.dd 121-128-2 > evidencias/meditation.mp3OA
+tar zxvf foremost-xx.tar.gz      
+      
+
+stegh.sh
+
+#!/bin/bash
+
+path="/home/kali/forense/Caso_Steg/evidencias"
+
+# Loop para percorrer todos os "jpg"
+for arquivo in "$path"/*.jpg; do
+	if [ -f "$arquivo" ]; then
+	   echo "Processando arquivo: $arquivo"
+	   for password in `cat wordlist.txt` do
+		steghide extract -sf $arquivo -p $password > /dev/null 2>&1
+	
+	       if [$? -eq 0 ]; then
+		echo "Algo foi encontrado."
+		echo "." 	
+		fi	   
+	   done
+       fi
+done
+
+
+touch wordlist.txr
+-------------------------------------------------------
+World list
+
+coloca essa senha na World list
+
+meditation.mp3
+1. esvazi3_@_x1cara
+
+steghide extract -sf all.jpg -p esvazi3_@_x1cara
+
+chmod +x stegh.sh
+
+./steg.ssh
+
+mv parabola ..evidencias
+
+zen.jpg
+-parabola
+-xamanism
+
+move as que foram achados para processados
+
+xamnism.jpg
+-open.jpg na verdade era um ASSCI
+
+md5decrypt.net
+
+Senha: one_mind
+coloca na world list também 
+
+./steg.ssh
+paisagem.jpg
+-tux.jpg
+
+mv tux.jpg ../evidencias
+
+grep -ri password
+procurar senha na pasta
+
+grep -ri "4. " /4.
+
+Senha: i_love_linux
+coloca na world list também 
+
+spam mimic decode mensagem e da decode 
+
+https://www.spammimic.com
+
+fls -apdr imagem.dd
+
+icat imagem.dd inode > arquivo.ext
+
+foremost 
+
+todos para recuperar arquivos 
+
+comparar os hash ver os scripts
+
+olhar apostila 
+
+stract 
+
+embed esconder mensagem em arquivo portador.
