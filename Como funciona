@@ -1,0 +1,179 @@
+🚀 1. STEGHIDE — para extrair arquivos escondidos dentro de IMAGENS
+✔ O que ele faz?
+
+Steghide esconde e revela arquivos dentro de:
+
+JPG
+
+BMP
+
+WAV
+
+AU
+
+Ele NÃO funciona em PNG, GIF, MPG, etc.
+
+✔ Quando usar?
+
+Quando você tem uma imagem que provavelmente tem um arquivo escondido com senha.
+
+🧪 COMANDOS ESSENCIAIS
+➤ Extrair conteúdo de uma imagem (com senha)
+steghide extract -sf imagem.jpg -p senha_aqui
+
+
+Se a senha estiver correta → ele extrai o arquivo escondido.
+
+➤ Extrair sem senha (tentar padrão)
+steghide extract -sf imagem.jpg
+
+➤ Adicionar arquivo escondido (para treinar)
+steghide embed -cf imagem.jpg -ef segredo.txt -p minha_senha
+
+🧠 Dicas forenses importantes
+
+Se você não sabe a senha → faça brute force com wordlist
+
+steghide SEMPRE avisa se a senha estiver errada
+
+Use strings, exiftool ou binwalk antes para achar pistas de senha
+
+Muitos desafios escondem TXT, ZIP, MP3, PDF dentro de imagens
+
+🚀 2. FOREMOST — recuperar arquivos deletados de uma imagem de disco
+✔ O que ele faz?
+
+FOREMOST é um recuperador forense de arquivos.
+Ele lê byte a byte um disco, pendrive, celular ou arquivo .dd e tenta recuperar arquivos perdidos.
+
+Suporta:
+
+JPG
+
+GIF
+
+PNG
+
+MP3
+
+PDF
+
+ZIP
+
+DOC
+
+etc
+
+✔ Quando usar?
+
+Quando você tem:
+
+um arquivo .dd
+
+um HD/pendrive clonado
+
+uma evidência apagada
+
+uma partição corrompida
+
+🧪 COMANDO PRINCIPAL
+➤ Recuperar tudo que existir dentro da imagem:
+foremost -i imagem.dd -o saida/
+
+➤ Gerar relatório
+foremost -T imagem.dd
+
+➤ Filtrar por tipo
+foremost -t jpg,png,mp3 -i imagem.dd -o recuperados/
+
+🧠 Dicas importante
+
+Ele cria pastas como:
+
+jpg
+
+png
+
+mp3
+
+pdf
+
+Se aparecer muita coisa → veja o report.txt
+
+🚀 3. fls (Sleuthkit) — listar arquivos dentro de uma imagem .dd
+✔ O que ele faz?
+
+fls lista TODOS os arquivos e metadados dentro de um disco .dd, inclusive:
+
+arquivos deletados
+
+diretórios ocultos
+
+inodes importantes
+
+nomes antigos de arquivos apagados
+
+✔ Quando usar?
+
+Quando você quiser:
+
+ver toda a estrutura interna do disco
+
+localizar um arquivo apagado
+
+descobrir onde está um inode
+
+depois extrair esse arquivo com icat
+
+🧪 COMANDOS ESSENCIAIS
+➤ Listar tudo (inclui deletados)
+fls -aprd imagem.dd
+
+
+Flags:
+
+a = mostrar todos os arquivos (incluindo deletados)
+
+p = caminhos completos
+
+r = recursivo
+
+d = mostrar entradas deletadas
+
+Resultado aparece assim:
+
+r/r 128:   arquivo.txt
+d/d 130:   pasta/
+r/r 121-128-2: meditation.mp3
+
+
+Note o número do inode → será usado no ICAT.
+
+🚀 4. icat — extrair arquivos usando o inode
+✔ O que ele faz?
+
+icat recupera o arquivo bruto, mesmo que esteja:
+
+deletado
+
+sem nome
+
+corrompido no diretório
+
+🧪 COMANDO PRINCIPAL
+icat imagem.dd 128 > arquivo_recuperado.ext
+
+
+Ou se for inode composto:
+
+icat imagem.dd 121-128-2 > meditation.mp3
+
+
+✔ Ele recria o arquivo exato!
+
+🎯 RESUMO RÁPIDO (para decorar)
+Ferramenta	Serve para	Uso principal
+Steghide	Extrair arquivos escondidos dentro de imagens	steghide extract -sf img.jpg -p senha
+Foremost	Recuperar arquivos deletados do disco	foremost -i disco.dd -o out/
+fls	Listar a estrutura interna da imagem (inclui deletados)	fls -aprd disco.dd
+icat	Extrair arquivo pelo inode encontrado no fls	icat disco.dd inode > arquivo
