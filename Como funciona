@@ -177,3 +177,148 @@ Steghide	Extrair arquivos escondidos dentro de imagens	steghide extract -sf img.
 Foremost	Recuperar arquivos deletados do disco	foremost -i disco.dd -o out/
 fls	Listar a estrutura interna da imagem (inclui deletados)	fls -aprd disco.dd
 icat	Extrair arquivo pelo inode encontrado no fls	icat disco.dd inode > arquivo
+
+🔥 O QUE É UMA WORDLIST?
+
+É um arquivo de texto que contém várias senhas, uma por linha:
+
+senha1
+senha2
+123456
+esvazi3_@_x1cara
+one_mind
+i_love_linux
+
+
+Ferramentas como steghide, john, hashcat, scripts bash, hydra usam wordlists para testar senhas automaticamente.
+
+🔑 PARA QUE ELA SERVE?
+
+Serve para bruteforce inteligente.
+
+➡️ Ao invés de adivinhar senhas na mão
+➡️ O programa pega cada senha da lista
+➡️ Testa no arquivo, hash ou login
+➡️ Até encontrar a senha correta
+
+Exemplo com steghide:
+
+steghide extract -sf imagem.jpg -p esvazi3_@_x1cara
+
+
+Se você não sabe a senha, você faz:
+
+for password in $(cat wordlist.txt)
+do
+  steghide extract -sf imagem.jpg -p $password
+done
+
+
+O script tenta TODAS as senhas da lista.
+
+🧠 COMO A WORDLIST FUNCIONA NA PRÁTICA?
+✔ 1. Você cria um arquivo wordlist:
+nano wordlist.txt
+
+
+Dentro coloca as senhas suspeitas:
+
+esvazi3_@_x1cara
+one_mind
+i_love_linux
+meditation
+senha123
+
+
+Salvar e sair (CTRL + X → ENTER).
+
+✔ 2. Um script lê esse arquivo linha por linha
+
+Exemplo de script:
+
+for password in $(cat wordlist.txt)
+do
+    steghide extract -sf arquivo.jpg -p $password
+done
+
+
+Esse script vai:
+
+pegar a 1ª senha da lista
+
+tentar extrair
+
+se der errado, tenta a próxima
+
+se der certo, extrai o arquivo oculto
+
+⚙️ FUNCIONAMENTO INTERNO
+
+Quando uma ferramenta usa wordlist ela faz:
+
+abre o wordlist
+
+lê cada linha
+
+envia a senha como tentativa
+
+verifica se foi aceita
+
+se der certo, para
+
+se não, tenta a próxima
+
+🧪 EXEMPLO REAL COM STEGHIDE E WORDLIST
+wordlist.txt:
+banana
+123456
+esvazi3_@_x1cara
+senha
+
+script (steg.sh):
+#!/bin/bash
+
+for P in $(cat wordlist.txt)
+do
+   steghide extract -sf imagem.jpg -p $P &> /dev/null
+   if [ $? -eq 0 ]; then
+        echo "Senha encontrada: $P"
+        break
+   fi
+done
+
+
+Se a senha da imagem for:
+
+esvazi3_@_x1cara
+
+
+O script imprime:
+
+Senha encontrada: esvazi3_@_x1cara
+
+
+E extrai o arquivo escondido.
+
+🏆 Onde você usa wordlist no seu caso?
+
+Você já encontrou:
+
+✔ esvazi3_@_x1cara
+✔ one_mind
+✔ i_love_linux
+✔ senhas escondidas em GIF
+✔ senhas em mp3
+✔ senhas em ASCII
+
+Todas essas devem ser adicionadas no wordlist.txt.
+
+Depois você roda o script para testar TODAS nas imagens.
+
+🎯 Resumo direto
+Palavra	Significado
+Wordlist	Arquivo com senhas para tentar automaticamente
+Usado para	steghide, brute force, hashes, login, redes
+Formato	Uma senha por linha
+Vantagem	Automatiza tentativas de senha
+Onde usar no seu caso	Arquivos .jpg ocultos no disco
